@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menyu | Gurmet Restoran</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Fonts (Poppins & Playfair Display) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(135deg, #f5f0e8 0%, #e8ddd0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+        }
+        .menu-container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 215, 175, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        /* Dekorativ elementlar */
+        .menu-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(90deg, #c49a6c, #e6b17e, #c49a6c);
+            z-index: 10;
+        }
+        .menu-container::after {
+            content: '✽ ✿ ✾';
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 24px;
+            color: #d4b08c;
+            opacity: 0.3;
+            letter-spacing: 8px;
+        }
+
+        /* HEADER - LUXURY STYLE */
+        .category-header {
+            background: linear-gradient(145deg, #2c1810 0%, #3d2a1f 100%);
+            padding: 30px 30px 35px;
+            position: relative;
+            border-bottom: 3px solid #c49a6c;
+        }
+        .category-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path d="M20,20 Q40,10 60,20 Q80,30 70,50 Q60,70 40,70 Q20,70 30,50 Q20,30 20,20" fill="none" stroke="%23e6b17e" stroke-width="1"/></svg>');
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        .header-top h1 {
+            font-family: 'Playfair Display', serif;
+            color: #fff;
+            font-size: 2.8rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 0;
+            position: relative;
+        }
+        .header-top h1::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, #e6b17e, transparent);
+        }
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+        .social-icon {
+            color: #fff;
+            font-size: 1.6rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            border: 1px solid rgba(230, 177, 126, 0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .social-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .social-icon:hover {
+            background: #e6b17e;
+            transform: translateY(-5px) rotate(8deg);
+            border-color: #fff;
+            box-shadow: 0 10px 20px rgba(230, 177, 126, 0.4);
+        }
+        .social-icon:hover::before {
+            left: 100%;
+        }
+        .social-icon:hover i {
+            color: #2c1810;
+        }
+        .social-icon i {
+            transition: all 0.3s;
+            font-size: 1.8rem;
+        }
+
+        /* KATEGORIYA TUGMALARI */
+        .category-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+            margin-top: 15px;
+        }
+        .cat-btn {
+            background: transparent;
+            border: 2px solid rgba(230, 177, 126, 0.6);
+            color: #e6b17e;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            padding: 12px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            min-width: 170px;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .cat-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(230, 177, 126, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+        .cat-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        .cat-btn:hover {
+            border-color: #fff;
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(230, 177, 126, 0.5);
+        }
+        .cat-btn.active {
+            background: #e6b17e;
+            color: #2c1810;
+            border-color: #fff;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(230, 177, 126, 0.5);
+        }
+
+        /* OVQATLAR BO'LIMI */
+        .food-section {
+            padding: 40px 35px;
+            background: #fcf9f5;
+            position: relative;
+        }
+        .food-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20px;
+            right: 20px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e6b17e, transparent);
+        }
+
+        /* Food list grid style */
+        .food-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .food-item {
+            background: white;
+            border-radius: 25px;
+            padding: 22px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            border: 1px solid #f0e0d4;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .food-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 0;
+            background: linear-gradient(180deg, #e6b17e, #c49a6c);
+            transition: height 0.3s ease;
+        }
+        .food-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 30px rgba(196, 154, 108, 0.2);
+            border-color: #e6b17e;
+        }
+        .food-item:hover::before {
+            height: 100%;
+        }
+        .food-name {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #2c1810;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .food-name span {
+            background: linear-gradient(145deg, #fcf3ec, #f5e4d8);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #c49a6c;
+            font-weight: 600;
+            font-size: 1.3rem;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e6b17e;
+        }
+        .food-price {
+            background: linear-gradient(145deg, #f0f7f2, #e1efe5);
+            color: #2c7a4d;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 8px 22px;
+            border-radius: 40px;
+            letter-spacing: 1px;
+            border: 1px solid #b8d9c5;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+            transition: all 0.3s;
+        }
+        .food-item:hover .food-price {
+            background: #2c7a4d;
+            color: white;
+            border-color: #2c7a4d;
+        }
+
+        /* DETAIL PANEL - LUXURY */
+        .details-panel {
+            background: linear-gradient(145deg, #fffcf8, #fef9f4);
+            border-radius: 30px;
+            padding: 30px;
+            border: 1px solid #e6d7cb;
+            box-shadow: inset 0 0 20px rgba(230, 177, 126, 0.1), 0 10px 20px rgba(0,0,0,0.05);
+            margin-top: 20px;
+            position: relative;
+        }
+        .details-panel h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #4a3729;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px dashed #e6b17e;
+            padding-bottom: 12px;
+        }
+        .details-panel h3 i {
+            color: #e6b17e;
+            font-size: 2rem;
+        }
+        .detail-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+        .detail-ingredients {
+            font-size: 1.2rem;
+            color: #5a4a3e;
+            line-height: 1.7;
+            flex: 2;
+            min-width: 280px;
+            padding: 5px 10px;
+            background: rgba(230, 177, 126, 0.05);
+            border-radius: 20px;
+            border-left: 4px solid #e6b17e;
+            padding-left: 25px;
+        }
+        .detail-ingredients strong {
+            font-size: 1.5rem;
+            color: #2c1810;
+            font-family: 'Playfair Display', serif;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .detail-price-large {
+            background: linear-gradient(145deg, #2c7a4d, #1e5a37);
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 700;
+            padding: 15px 40px;
+            border-radius: 60px;
+            white-space: nowrap;
+            box-shadow: 0 10px 20px rgba(44, 122, 77, 0.3);
+            border: 2px solid #ffd9b0;
+            letter-spacing: 2px;
+        }
+        .no-selection {
+            font-size: 1.3rem;
+            color: #b4a69b;
+            text-align: center;
+            padding: 35px;
+            background: #faf5f0;
+            border-radius: 25px;
+            border: 2px dashed #d4b8a8;
+            font-style: italic;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #2c1810;
+            color: #d9c2b3;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+            border-top: 2px solid #e6b17e;
+            position: relative;
+        }
+        footer span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+        .footer-social {
+            display: flex;
+            gap: 20px;
+        }
+        .footer-social a {
+            color: #d9c2b3;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        .footer-social a:hover {
+            color: #e6b17e;
+            background: rgba(230, 177, 126, 0.15);
+            transform: translateY(-3px);
+        }
+
+        /* ANIMATION */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .food-item {
+            animation: fadeInUp 0.5s ease-out forwards;
+            animation-fill-mode: both;
+        }
+        .food-item:nth-child(1) { animation-delay: 0.1s; }
+        .food-item:nth-child(2) { animation-delay: 0.2s; }
+        .food-item:nth-child(3) { animation-delay: 0.3s; }
+        .food-item:nth-child(4) { animation-delay: 0.4s; }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .header-top {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .header-top h1::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .cat-btn {
+                font-size: 1.4rem;
+                padding: 10px 25px;
+                min-width: 130px;
+            }
+            .food-list {
+                grid-template-columns: 1fr;
+            }
+            .detail-price-large {
+                font-size: 1.6rem;
+                padding: 10px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <!-- LUXURY HEADER -->
+        <div class="category-header">
+            <div class="header-top">
+                <h1>GURMET</h1>
+                <div class="social-icons">
+                    <a href="https://instagram.com" target="_blank" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://t.me" target="_blank" class="social-icon">
+                        <i class="fab fa-telegram-plane"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="category-buttons">
+                <div class="cat-btn active" data-category="salat">🥗 Salat</div>
+                <div class="cat-btn" data-category="first">🍲 1-ovqat</div>
+                <div class="cat-btn" data-category="second">🍖 2-ovqat</div>
+            </div>
+        </div>
+
+        <!-- MENU CONTENT -->
+        <div class="food-section">
+            <div id="foodListContainer" class="food-list">
+                <!-- JS to'ldiradi -->
+            </div>
+
+            <!-- DETAIL PANEL -->
+            <div class="details-panel" id="detailPanel">
+                <h3>
+                    <i class="fas fa-utensils"></i> Taom tarkibi
+                </h3>
+                <div id="detailContent" class="no-selection">
+                    <i class="fas fa-hand-point-up" style="margin-right: 10px;"></i> Taomni tanlang
+                </div>
+            </div>
+        </div>
+        
+        <!-- FOOTER -->
+        <footer>
+            <span>✧ 2026 ✧ GURMET</span>
+            <div class="footer-social">
+                <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://t.me" target="_blank"><i class="fab fa-telegram"></i></a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // MA'LUMOTLAR
+        const menuData = {
+            salat: [
+                { name: "Sezar salat", ingredients: "Tovuq filesi, aysberg, parmesan, kruton, Sezar sousi", price: 32000 },
+                { name: "Yunon salat", ingredients: "Feta, bodring, pomidor, qalampir, zaytun, oregano", price: 28000 },
+                { name: "Issiq sabzavotli", ingredients: "Grill qilingan qovoq, baqlajon, bolgar qalampiri, sarimsoqli sous", price: 35000 },
+                { name: "Cobb salat", ingredients: "Tovuq, bekon, tuxum, avakado, pomidor, ko'k piyoz, roka", price: 39000 }
+            ],
+            first: [
+                { name: "Mastava", ingredients: "Qo'y go'shti, guruch, sabzi, piyoz, zira, yangi ko'katlar", price: 27000 },
+                { name: "Lag'mon", ingredients: "Xamir, mol go'shti, bulg'or qalampiri, karam, sabzi, ko'k piyoz", price: 32000 },
+                { name: "Sho'rva (kachka)", ingredients: "Qo'y qovurg'a, no'xat, kartoshka, piyoz, ziravorlar", price: 38000 },
+                { name: "Ugra", ingredients: "Qo'y go'shti, ugra, nisholda, loviya, qatiq", price: 34000 }
+            ],
+            second: [
+                { name: "Kabob (qiyma)", ingredients: "Mol go'shti qiymasi, piyoz, maxsus zira, non bilan", price: 45000 },
+                { name: "Qozon kabob", ingredients: "Qo'y go'shti, kartoshka, piyoz, qazi, sabzi, sarimsoq", price: 52000 },
+                { name: "Tandir tovuq", ingredients: "Butun tovuq, tandir spices, kartoshka fri va sous", price: 48000 },
+                { name: "Jiz", ingredients: "Qo'y jigari, piyoz, kartoshka, maxsus zira, ko'katlar", price: 43000 }
+            ]
+        };
+
+        // DOM elementlar
+        const foodListContainer = document.getElementById('foodListContainer');
+        const detailContent = document.getElementById('detailContent');
+        const catButtons = document.querySelectorAll('.cat-btn');
+        
+        let currentCategory = 'salat';
+        let activeFood = null;
+
+        // Kategoriya tugmalari
+        catButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                catButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const category = this.dataset.category;
+                currentCategory = category;
+                renderFoodList(category);
+            });
+        });
+
+        // Taomlar ro'yxatini chiqarish
+        function renderFoodList(category) {
+            const items = menuData[category];
+            if (!items) return;
+
+            let htmlStr = '';
+            items.forEach((item, index) => {
+                htmlStr += `
+                    <div class="food-item" data-food-index="${index}" style="animation-delay: ${0.1 * (index+1)}s">
+                        <div class="food-name">
+                            <span>${index+1}</span> ${item.name}
+                        </div>
+                        <div class="food-price">${item.price.toLocaleString()} so'm</div>
+                    </div>
+                `;
+            });
+            foodListContainer.innerHTML = htmlStr;
+
+            // Eventlar
+            document.querySelectorAll('.food-item').forEach((itemDiv, idx) => {
+                itemDiv.addEventListener('click', () => {
+                    const foodObj = menuData[category][idx];
+                    activeFood = foodObj;
+                    showDetails(foodObj);
+                });
+            });
+
+            // Active foodni tekshirish
+            if (activeFood) {
+                const stillExists = items.some(item => item.name === activeFood.name);
+                if (stillExists) {
+                    showDetails(activeFood);
+                } else {
+                    detailContent.innerHTML = `<div class="no-selection"><i class="fas fa-utensil-spoon"></i> Yangi taom tanlang</div>`;
+                    activeFood = null;
+                }
+            } else {
+                detailContent.innerHTML = `<div class="no-selection"><i class="fas fa-hand-point-up"></i> Taomni bosing</div>`;
+            }
+        }
+
+        // Detal panelni yangilash
+        function showDetails(food) {
+            detailContent.innerHTML = `
+                <div class="detail-content">
+                    <div class="detail-ingredients">
+                        <strong>${food.name}</strong>
+                        ${food.ingredients}
+                    </div>
+                    <div class="detail-price-large">${food.price.toLocaleString()} so'm</div>
+                </div>
+            `;
+        }
+
+        // Boshlang'ich render
+        renderFoodList('salat');
+    </script>
+</body>
+</html>
