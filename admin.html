@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Choyxona</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f2f0e9; font-family: 'Inter', sans-serif; min-height: 100vh; padding: 20px; }
+        .admin-container { max-width: 1000px; margin: 0 auto; }
+        .admin-header { background: linear-gradient(135deg, #0a1f2e 0%, #1d3b4c 100%); padding: 30px; border-radius: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .admin-title { font-size: 2rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 12px; }
+        .logout-btn { background: #fee; color: #c33; padding: 12px 24px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .logout-btn:hover { background: #fcc; transform: translateY(-2px); }
+        .admin-tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .admin-tab { padding: 12px 24px; background: #f8f7f4; border: 2px solid transparent; border-radius: 12px; font-weight: 600; color: #64748b; cursor: pointer; transition: all 0.2s; }
+        .admin-tab:hover { background: #e8e6e1; }
+        .admin-tab.active { background: #0a1f2e; color: white; border-color: #0a1f2e; }
+        .admin-content { background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); min-height: 500px; }
+        .dish-item { background: #f8f7f4; border-radius: 16px; padding: 16px; margin-bottom: 12px; display: flex; gap: 16px; align-items: center; border: 1px solid #eaeaea; }
+        .dish-item img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; }
+        .dish-info { flex: 1; }
+        .dish-name { font-weight: 600; color: #1e293b; margin-bottom: 4px; }
+        .dish-desc { font-size: 0.85rem; color: #64748b; margin-bottom: 8px; }
+        .dish-price { font-weight: 700; color: #0f5b3c; }
+        .dish-actions { display: flex; gap: 8px; }
+        .btn-edit, .btn-delete { padding: 8px 16px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .btn-edit { background: #e6b17e; color: #0a1f2e; }
+        .btn-edit:hover { background: #d4a06d; }
+        .btn-delete { background: #fee; color: #c33; }
+        .btn-delete:hover { background: #fcc; }
+        .btn-add { background: #0f5b3c; color: white; padding: 14px 28px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; margin-top: 20px; transition: all 0.2s; }
+        .btn-add:hover { background: #1a784b; }
+        .btn-add-category { background: #0a1f2e; color: white; padding: 14px 28px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; margin-bottom: 20px; transition: all 0.2s; }
+        .btn-add-category:hover { background: #1d3b4c; transform: translateY(-2px); }
+        .form-group { margin-bottom: 20px; }
+        .form-label { font-weight: 600; color: #1e293b; margin-bottom: 8px; display: block; }
+        .form-input, .form-textarea { width: 100%; padding: 12px 16px; border: 2px solid #eaeaea; border-radius: 12px; font-family: inherit; font-size: 1rem; transition: all 0.2s; }
+        .form-input:focus, .form-textarea:focus { outline: none; border-color: #e6b17e; }
+        .form-textarea { min-height: 80px; resize: vertical; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .form-modal { background: white; max-width: 500px; width: 95%; border-radius: 20px; padding: 30px; }
+        .form-title { font-size: 1.5rem; font-weight: 700; color: #1d3b4c; margin-bottom: 20px; }
+        .form-actions { display: flex; gap: 12px; margin-top: 24px; }
+        .btn-save { flex: 1; background: #0f5b3c; color: white; padding: 14px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-save:hover { background: #1a784b; }
+        .btn-cancel { flex: 1; background: #fee; color: #c33; padding: 14px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-cancel:hover { background: #fcc; }
+        .btn-upload { background: #e6b17e; color: #0a1f2e; padding: 12px 24px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-upload:hover { background: #d4a06d; transform: translateY(-2px); }
+        .login-container { max-width: 450px; margin: 80px auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-icon { font-size: 3rem; color: #0a1f2e; margin-bottom: 16px; }
+        .login-title { font-size: 1.8rem; font-weight: 700; color: #1d3b4c; margin-bottom: 8px; }
+        .login-subtitle { font-size: 0.95rem; color: #64748b; }
+        .settings-section { background: white; border-radius: 16px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .settings-title { font-size: 1.3rem; font-weight: 700; color: #1d3b4c; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .color-picker-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
+        .color-picker-group { display: flex; flex-direction: column; gap: 8px; }
+        .color-picker-group label { font-weight: 600; color: #64748b; font-size: 0.9rem; }
+        .color-input-wrapper { display: flex; align-items: center; gap: 10px; border: 2px solid #eaeaea; border-radius: 12px; padding: 8px; transition: all 0.2s; }
+        .color-input-wrapper:focus-within { border-color: #e6b17e; }
+        input[type="color"] { width: 50px; height: 50px; border: none; cursor: pointer; border-radius: 8px; }
+        .color-value { flex: 1; font-family: monospace; font-size: 0.95rem; color: #1e293b; }
+        .text-size-control { margin-bottom: 16px; }
+        .text-size-control label { display: block; font-weight: 600; color: #64748b; margin-bottom: 8px; }
+        .size-slider-wrapper { display: flex; align-items: center; gap: 12px; }
+        input[type="range"] { flex: 1; height: 6px; border-radius: 3px; background: #eaeaea; appearance: none; cursor: pointer; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #e6b17e; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .size-value { min-width: 50px; text-align: right; font-weight: 600; color: #1d3b4c; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div id="loginScreen" class="login-container">
+            <div class="login-header">
+                <div class="login-icon">🔐</div>
+                <div class="login-title">Admin Kirish</div>
+                <div class="login-subtitle">Tizimga kirish uchun ma'lumotlarni kiriting</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Login</label>
+                <input type="text" id="adminLogin" class="form-input" placeholder="admin">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Parol</label>
+                <input type="password" id="adminPassword" class="form-input" placeholder="••••••••">
+            </div>
+            <div class="form-actions">
+                <button class="btn-cancel" onclick="window.location.href='index.html'">Bosh menyu</button>
+                <button class="btn-save" onclick="adminLogin()"><i class="fas fa-sign-in-alt"></i> Kirish</button>
+            </div>
+        </div>
+
+        <div id="adminPanel" style="display: none;">
+            <div class="admin-header">
+                <div class="admin-title"><i class="fas fa-cog"></i> 🛠️ Admin Panel - Taomlar Boshqaruvi</div>
+                <button class="logout-btn" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Chiqish</button>
+            </div>
+            
+            <!-- Settings Tabs -->
+            <div style="display:flex;gap:10px;margin-bottom:20px;">
+                <button class="admin-tab active" onclick="showSettingsTab('dishes')"><i class="fas fa-utensils"></i> Taomlar</button>
+                <button class="admin-tab" onclick="showSettingsTab('colors')"><i class="fas fa-palette"></i> Ranglar</button>
+                <button class="admin-tab" onclick="showSettingsTab('texts')"><i class="fas fa-font"></i> Matnlar</button>
+            </div>
+            
+            <!-- Dishes Tab -->
+            <div id="dishesTab">
+                <div class="admin-tabs"></div>
+                <button class="btn-add-category" onclick="openAddCategoryForm()"><i class="fas fa-folder-plus"></i> Yangi bo'lim qo'shish</button>
+                <div id="adminContent" class="admin-content"></div>
+                <button class="btn-add" onclick="openAddDishForm()"><i class="fas fa-plus"></i> Yangi taom qo'shish</button>
+            </div>
+            
+            <!-- Colors Tab -->
+            <div id="colorsTab" style="display:none;">
+                <div class="settings-section">
+                    <div class="settings-title"><i class="fas fa-palette"></i> Frontend Ranglarini Sozlash</div>
+                    <div class="color-picker-row">
+                        <div class="color-picker-group">
+                            <label>Asosiy fon rangi</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="bgColor" value="#f2f0e9" onchange="updateColor('bgColor', this.value)">
+                                <span class="color-value" id="bgColorValue">#f2f0e9</span>
+                            </div>
+                        </div>
+                        <div class="color-picker-group">
+                            <label>Karta foni</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="cardBgColor" value="#ffffff" onchange="updateColor('cardBgColor', this.value)">
+                                <span class="color-value" id="cardBgColorValue">#ffffff</span>
+                            </div>
+                        </div>
+                        <div class="color-picker-group">
+                            <label>Header gradient (boshlanishi)</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="headerColor1" value="#0a1f2e" onchange="updateColor('headerColor1', this.value)">
+                                <span class="color-value" id="headerColor1Value">#0a1f2e</span>
+                            </div>
+                        </div>
+                        <div class="color-picker-group">
+                            <label>Header gradient (oxiri)</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="headerColor2" value="#1d3b4c" onchange="updateColor('headerColor2', this.value)">
+                                <span class="color-value" id="headerColor2Value">#1d3b4c</span>
+                            </div>
+                        </div>
+                        <div class="color-picker-group">
+                            <label>Aktiv kategoriya rangi</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="accentColor" value="#e6b17e" onchange="updateColor('accentColor', this.value)">
+                                <span class="color-value" id="accentColorValue">#e6b17e</span>
+                            </div>
+                        </div>
+                        <div class="color-picker-group">
+                            <label>Narx rangi</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="priceColor" value="#0f5b3c" onchange="updateColor('priceColor', this.value)">
+                                <span class="color-value" id="priceColorValue">#0f5b3c</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-add" onclick="resetColors()" style="margin-top:20px;background:#c33;"><i class="fas fa-undo"></i> Ranglarni Qayta Tiklash</button>
+                </div>
+            </div>
+            
+            <!-- Texts Tab -->
+            <div id="textsTab" style="display:none;">
+                <div class="settings-section">
+                    <div class="settings-title"><i class="fas fa-font"></i> Matnlarni Tahrirlash</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Restoran Nomi</label>
+                        <input type="text" id="restoNameText" class="form-input" value="CHAYXONA">
+                    </div>
+                    
+                    <div class="text-size-control">
+                        <label>Restoran nomi hajmi (px)</label>
+                        <div class="size-slider-wrapper">
+                            <input type="range" id="restoNameSize" min="16" max="48" value="32" onchange="updateTextSize('restoNameSize', this.value)">
+                            <span class="size-value" id="restoNameSizeValue">32px</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Footer matni</label>
+                        <input type="text" id="footerText" class="form-input" value="© 2026 · Chayxona">
+                    </div>
+                    
+                    <div class="text-size-control">
+                        <label>Footer matni hajmi (px)</label>
+                        <div class="size-slider-wrapper">
+                            <input type="range" id="footerSize" min="10" max="24" value="14" onchange="updateTextSize('footerSize', this.value)">
+                            <span class="size-value" id="footerSizeValue">14px</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Bo'sh panel xabari</label>
+                        <input type="text" id="emptyPanelText" class="form-input" value="Taom tanlang">
+                    </div>
+                    
+                    <div class="text-size-control">
+                        <label>Panel xabari hajmi (px)</label>
+                        <div class="size-slider-wrapper">
+                            <input type="range" id="emptyPanelSize" min="10" max="24" value="14" onchange="updateTextSize('emptyPanelSize', this.value)">
+                            <span class="size-value" id="emptyPanelSizeValue">14px</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Salat bo'limi nomi</label>
+                            <input type="text" id="salatNameText" class="form-input" value="Salat">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">1-ovqat bo'limi nomi</label>
+                            <input type="text" id="firstNameText" class="form-input" value="1-ovqat">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">2-ovqat bo'limi nomi</label>
+                            <input type="text" id="secondNameText" class="form-input" value="2-ovqat">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Copyright yili</label>
+                            <input type="text" id="copyrightYearText" class="form-input" value="2026">
+                        </div>
+                    </div>
+                    
+                    <button class="btn-save" onclick="saveTexts()"><i class="fas fa-save"></i> Barcha matnlarni saqlash</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="categoryModal" class="modal-overlay">
+        <div class="form-modal">
+            <div class="form-title" id="categoryFormTitle">📁 Yangi bo'lim</div>
+            <div class="form-group">
+                <label class="form-label">Bo'lim nomi</label>
+                <input type="text" id="categoryName" class="form-input" placeholder="Masalan: Shirinliklar">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Icon (Emoji yoki Icon class)</label>
+                <input type="text" id="categoryIcon" class="form-input" placeholder="fas fa-cookie">
+                <small style="color: #64748b; font-size: 0.8rem;">Misol: fas fa-cookie yoki 🍰</small>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Yoki fayldan icon yuklash</label>
+                <button type="button" class="btn-upload" onclick="document.getElementById('categoryIconUpload').click()"><i class="fas fa-image"></i> Icon tanlash</button>
+                <input type="file" id="categoryIconUpload" accept="image/*" style="display: none;" onchange="handleCategoryIconUpload(this)">
+                <div id="categoryIconPreview" style="margin-top: 10px; display: none;"><img id="categoryPreviewImg" src="" alt="Icon Preview" style="width: 60px; height: 60px; border-radius: 12px; border: 2px solid #e6b17e; object-fit: cover;"></div>
+            </div>
+            <div class="form-actions">
+                <button class="btn-cancel" onclick="closeCategoryModal()">Bekor qilish</button>
+                <button class="btn-save" onclick="saveCategory()">Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dishModal" class="modal-overlay">
+        <div class="form-modal">
+            <div class="form-title" id="formTitle">➕ Yangi taom</div>
+            <div class="form-group">
+                <label class="form-label">Taom nomi</label>
+                <input type="text" id="dishName" class="form-input" placeholder="Masalan: Sezar salat">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Tarkibi / Tavsif</label>
+                <textarea id="dishDesc" class="form-textarea" placeholder="Taom tarkibini yozing..."></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Narxi (so'm)</label>
+                    <input type="number" id="dishPrice" class="form-input" placeholder="32000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rasm URL</label>
+                    <input type="text" id="dishImage" class="form-input" placeholder="https://...">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Yoki fayldan rasm yuklash</label>
+                <button type="button" class="btn-upload" onclick="document.getElementById('dishImageUpload').click()"><i class="fas fa-image"></i> Rasm tanlash</button>
+                <input type="file" id="dishImageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(this)">
+                <div id="imagePreview" style="margin-top: 10px; display: none;"><img id="previewImg" src="" alt="Preview" style="max-width: 200px; border-radius: 12px; border: 2px solid #e6b17e;"></div>
+            </div>
+            <div class="form-actions">
+                <button class="btn-cancel" onclick="closeDishModal()">Bekor qilish</button>
+                <button class="btn-save" onclick="saveDish()">Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuData = {
+            salat: [
+                { name: "Sezar salat", desc: "Tovuq filesi, aysberg, parmesan, kruton, sous", price: 32000, image: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=400&h=300&fit=crop" },
+                { name: "Yunon salat", desc: "Feta, bodring, pomidor, qalampir, zaytun", price: 28000, image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=300&fit=crop" },
+                { name: "Sabzavotli", desc: "Grill qovoq, baqlajon, bolgar, sarimsoq sous", price: 35000, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop" },
+                { name: "Cobb", desc: "Tovuq, bekon, tuxum, avakado, pomidor, roka", price: 39000, image: "https://images.unsplash.com/photo-1551248429-40975aa4de74?w=400&h=300&fit=crop" }
+            ],
+            first: [
+                { name: "Mastava", desc: "Qo'y go'shti, guruch, sabzi, piyoz, zira", price: 27000, image: "https://images.unsplash.com/photo-1547592166-23acbe346499?w=400&h=300&fit=crop" },
+                { name: "Lag'mon", desc: "Mol go'shti, qalampir, karam, sabzi, ko'k piyoz", price: 32000, image: "https://images.unsplash.com/photo-1626804475297-411dbe66c2db?w=400&h=300&fit=crop" },
+                { name: "Sho'rva", desc: "Qo'y qovurg'a, no'xat, kartoshka, piyoz", price: 38000, image: "https://images.unsplash.com/photo-1547924454-ef1fa0bf6432?w=400&h=300&fit=crop" },
+                { name: "Ugra", desc: "Qo'y go'shti, ugra, loviya, qatiq, sarimsoq", price: 34000, image: "https://images.unsplash.com/photo-1543340904-991f3751a30f?w=400&h=300&fit=crop" }
+            ],
+            second: [
+                { name: "Qiyma kabob", desc: "Mol go'shti qiymasi, piyoz, zira, non", price: 45000, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&h=300&fit=crop" },
+                { name: "Qozon kabob", desc: "Qo'y go'shti, kartoshka, piyoz, qazi", price: 52000, image: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=400&h=300&fit=crop" },
+                { name: "Tandir tovuq", desc: "Tovuq, tandir ziravorlari, kartoshka", price: 48000, image: "https://images.unsplash.com/photo-1598103442097-2b715c336d62?w=400&h=300&fit=crop" },
+                { name: "Jiz", desc: "Qo'y jigari, piyoz, kartoshka, maxsus zira", price: 43000, image: "https://images.unsplash.com/photo-1555939581-3c1ebc8967c3?w=400&h=300&fit=crop" }
+            ]
+        };
+
+        let currentCategory = 'salat';
+        let editingDishIndex = null;
+        let uploadedImageData = null;
+        let uploadedCategoryIconData = null;
+        let menuCategories = [
+            { id: 'salat', name: 'Salat', icon: 'fas fa-leaf' },
+            { id: 'first', name: '1-ovqat', icon: 'fas fa-utensils' },
+            { id: 'second', name: '2-ovqat', icon: 'fas fa-fire' }
+        ];
+        
+        // Default colors
+        const defaultColors = {
+            bgColor: '#f2f0e9',
+            cardBgColor: '#ffffff',
+            headerColor1: '#0a1f2e',
+            headerColor2: '#1d3b4c',
+            accentColor: '#e6b17e',
+            priceColor: '#0f5b3c'
+        };
+        
+        // Default texts
+        const defaultTexts = {
+            restoName: 'CHAYXONA',
+            footerText: '© 2026 · Chayxona',
+            emptyPanelText: 'Taom tanlang',
+            salatName: 'Salat',
+            firstName: '1-ovqat',
+            secondName: '2-ovqat',
+            copyrightYear: '2026',
+            restoNameSize: '32',
+            footerSize: '14',
+            emptyPanelSize: '14'
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            if (isLoggedIn === 'true') showAdminPanel();
+            
+            // Load saved data
+            const savedCategories = localStorage.getItem('menuCategories');
+            const savedData = localStorage.getItem('menuData');
+            const savedColors = localStorage.getItem('siteColors');
+            const savedTexts = localStorage.getItem('siteTexts');
+            
+            if (savedCategories) menuCategories = JSON.parse(savedCategories);
+            if (savedData) Object.assign(menuData, JSON.parse(savedData));
+            
+            // Load colors
+            if (savedColors) {
+                const colors = JSON.parse(savedColors);
+                Object.keys(colors).forEach(key => {
+                    const input = document.getElementById(key);
+                    const valueSpan = document.getElementById(key + 'Value');
+                    if (input) {
+                        input.value = colors[key];
+                        if (valueSpan) valueSpan.textContent = colors[key];
+                    }
+                });
+            }
+            
+            // Load texts
+            if (savedTexts) {
+                const texts = JSON.parse(savedTexts);
+                Object.keys(texts).forEach(key => {
+                    const input = document.getElementById(key + 'Text');
+                    if (input) input.value = texts[key];
+                    
+                    // Load size sliders
+                    const sizeInput = document.getElementById(key);
+                    const sizeValue = document.getElementById(key + 'Value');
+                    if (sizeInput && texts[key]) {
+                        sizeInput.value = texts[key];
+                        if (sizeValue) sizeValue.textContent = texts[key] + 'px';
+                    }
+                });
+            }
+            
+            // Update category names in menuCategories if changed
+            if (savedTexts) {
+                const texts = JSON.parse(savedTexts);
+                menuCategories.forEach(cat => {
+                    if (cat.id === 'salat' && texts.salatName) cat.name = texts.salatName;
+                    if (cat.id === 'first' && texts.firstName) cat.name = texts.firstName;
+                    if (cat.id === 'second' && texts.secondName) cat.name = texts.secondName;
+                });
+            }
+            
+            renderCategoryTabs();
+            renderAdminContent(currentCategory);
+        });
+
+        function adminLogin() {
+            const login = document.getElementById('adminLogin').value.trim();
+            const password = document.getElementById('adminPassword').value.trim();
+            if (login === 'admin' && password === 'admin123') {
+                localStorage.setItem('adminLoggedIn', 'true');
+                showAdminPanel();
+                document.getElementById('adminLogin').value = '';
+                document.getElementById('adminPassword').value = '';
+            } else {
+                alert('❌ Login yoki parol noto\'g\'ri!');
+            }
+        }
+
+        function adminLogout() {
+            if (confirm('Chiqmoqchimisiz?')) {
+                localStorage.removeItem('adminLoggedIn');
+                document.getElementById('loginScreen').style.display = 'block';
+                document.getElementById('adminPanel').style.display = 'none';
+            }
+        }
+
+        function showAdminPanel() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            renderCategoryTabs();
+            renderAdminContent(currentCategory);
+        }
+
+        function renderCategoryTabs() {
+            const tabsContainer = document.querySelector('.admin-tabs');
+            tabsContainer.innerHTML = '';
+            menuCategories.forEach(cat => {
+                const tab = document.createElement('div');
+                tab.className = 'admin-tab' + (currentCategory === cat.id ? ' active' : '');
+                tab.dataset.tab = cat.id;
+                
+                // Create text span for click
+                const textSpan = document.createElement('span');
+                textSpan.innerHTML = `<i class="${cat.icon}"></i> ${cat.name}`;
+                textSpan.style.cursor = 'pointer';
+                textSpan.onclick = function() { switchAdminTab(cat.id); };
+                tab.appendChild(textSpan);
+                
+                // Add delete button for all categories
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+                deleteBtn.style.cssText = 'background:none;border:none;color:#c33;cursor:pointer;margin-left:10px;font-size:1rem;padding:4px 8px;border-radius:4px;transition:all 0.2s;';
+                deleteBtn.onmouseover = function() { this.style.background = '#fee'; };
+                deleteBtn.onmouseout = function() { this.style.background = 'none'; };
+                deleteBtn.onclick = function(e) { e.preventDefault(); e.stopPropagation(); deleteCategory(cat.id); return false; };
+                tab.appendChild(deleteBtn);
+                
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        function switchAdminTab(category) {
+            document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+            const activeTab = document.querySelector(`.admin-tab[data-tab="${category}"]`);
+            if (activeTab) activeTab.classList.add('active');
+            currentCategory = category;
+            renderAdminContent(category);
+        }
+
+        function renderAdminContent(category) {
+            const items = menuData[category];
+            if (!items || items.length === 0) {
+                document.getElementById('adminContent').innerHTML = '<div style="text-align:center;padding:40px;color:#999;"><i class="fas fa-utensils" style="font-size:3rem;margin-bottom:16px;opacity:0.3;"></i><p>Bu bo\'limda taomlar yo\'q</p></div>';
+                return;
+            }
+            let html = '';
+            items.forEach((item, index) => {
+                html += `<div class="dish-item"><img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'"><div class="dish-info"><div class="dish-name">${item.name}</div><div class="dish-desc">${item.desc}</div><div class="dish-price">${(item.price/1000).toFixed(1)} so'm</div></div><div class="dish-actions"><button class="btn-edit" onclick="editDish(${index})"><i class="fas fa-edit"></i></button><button class="btn-delete" onclick="deleteDish(${index})"><i class="fas fa-trash"></i></button></div></div>`;
+            });
+            document.getElementById('adminContent').innerHTML = html;
+        }
+
+        function openAddDishForm() {
+            editingDishIndex = null;
+            uploadedImageData = null;
+            document.getElementById('formTitle').textContent = '➕ Yangi taom';
+            document.getElementById('dishName').value = '';
+            document.getElementById('dishDesc').value = '';
+            document.getElementById('dishPrice').value = '';
+            document.getElementById('dishImage').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('dishModal').classList.add('active');
+        }
+
+        function editDish(index) {
+            editingDishIndex = index;
+            const item = menuData[currentCategory][index];
+            uploadedImageData = null;
+            document.getElementById('formTitle').textContent = '✏️ Taomni tahrirlash';
+            document.getElementById('dishName').value = item.name;
+            document.getElementById('dishDesc').value = item.desc;
+            document.getElementById('dishPrice').value = item.price;
+            document.getElementById('dishImage').value = item.image;
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('dishModal').classList.add('active');
+        }
+
+        function handleImageUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImageData = e.target.result;
+                document.getElementById('previewImg').src = uploadedImageData;
+                document.getElementById('imagePreview').style.display = 'block';
+                document.getElementById('dishImage').value = '';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function closeDishModal() { document.getElementById('dishModal').classList.remove('active'); }
+
+        function saveDish() {
+            const name = document.getElementById('dishName').value.trim();
+            const desc = document.getElementById('dishDesc').value.trim();
+            const price = parseFloat(document.getElementById('dishPrice').value);
+            const image = uploadedImageData || document.getElementById('dishImage').value.trim() || 'https://via.placeholder.com/400x300?text=No+Image';
+            if (!name || !desc || !price) { alert('Iltimos, barcha maydonlarni to\'ldiring!'); return; }
+            if (editingDishIndex === null) menuData[currentCategory].push({ name, desc, price, image });
+            else menuData[currentCategory][editingDishIndex] = { name, desc, price, image };
+            closeDishModal();
+            renderAdminContent(currentCategory);
+            localStorage.setItem('menuData', JSON.stringify(menuData));
+        }
+
+        function deleteDish(index) {
+            if (confirm('Bu taomni o\'chirmoqchimisiz?')) {
+                menuData[currentCategory].splice(index, 1);
+                renderAdminContent(currentCategory);
+                localStorage.setItem('menuData', JSON.stringify(menuData));
+            }
+        }
+
+        function openAddCategoryForm() {
+            uploadedCategoryIconData = null;
+            document.getElementById('categoryFormTitle').textContent = '📁 Yangi bo\'lim';
+            document.getElementById('categoryName').value = '';
+            document.getElementById('categoryIcon').value = '';
+            document.getElementById('categoryIconPreview').style.display = 'none';
+            document.getElementById('categoryModal').classList.add('active');
+        }
+
+        function handleCategoryIconUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedCategoryIconData = e.target.result;
+                document.getElementById('categoryPreviewImg').src = uploadedCategoryIconData;
+                document.getElementById('categoryIconPreview').style.display = 'block';
+                document.getElementById('categoryIcon').value = '';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function closeCategoryModal() { document.getElementById('categoryModal').classList.remove('active'); }
+
+        function saveCategory() {
+            const name = document.getElementById('categoryName').value.trim();
+            const icon = uploadedCategoryIconData || document.getElementById('categoryIcon').value.trim() || 'fas fa-folder';
+            if (!name) { alert('Bo\'lim nomini kiriting!'); return; }
+            const id = name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+            if (menuCategories.find(cat => cat.id === id)) { alert('Bu bo\'lim allaqachon mavjud!'); return; }
+            menuCategories.push({ id, name, icon });
+            menuData[id] = [];
+            closeCategoryModal();
+            renderCategoryTabs();
+            localStorage.setItem('menuCategories', JSON.stringify(menuCategories));
+            localStorage.setItem('menuData', JSON.stringify(menuData));
+        }
+
+        function deleteCategory(categoryId) {
+            if (confirm('Bu bo\'limni o\'chirmoqchimisiz? Barcha taomlar ham o\'chiriladi!')) {
+                menuCategories = menuCategories.filter(cat => cat.id !== categoryId);
+                delete menuData[categoryId];
+                if (currentCategory === categoryId) {
+                    currentCategory = menuCategories[0]?.id || 'salat';
+                }
+                renderCategoryTabs();
+                renderAdminContent(currentCategory);
+                localStorage.setItem('menuCategories', JSON.stringify(menuCategories));
+                localStorage.setItem('menuData', JSON.stringify(menuData));
+            }
+        }
+        
+        // Settings functions
+        function showSettingsTab(tabName) {
+            document.getElementById('dishesTab').style.display = 'none';
+            document.getElementById('colorsTab').style.display = 'none';
+            document.getElementById('textsTab').style.display = 'none';
+            
+            document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
+            
+            if (tabName === 'dishes') {
+                document.getElementById('dishesTab').style.display = 'block';
+                event.target.closest('.admin-tab').classList.add('active');
+            } else if (tabName === 'colors') {
+                document.getElementById('colorsTab').style.display = 'block';
+                event.target.closest('.admin-tab').classList.add('active');
+            } else if (tabName === 'texts') {
+                document.getElementById('textsTab').style.display = 'block';
+                event.target.closest('.admin-tab').classList.add('active');
+            }
+        }
+        
+        function updateColor(colorId, value) {
+            const valueSpan = document.getElementById(colorId + 'Value');
+            if (valueSpan) valueSpan.textContent = value;
+            
+            // Save all colors
+            const colors = {};
+            Object.keys(defaultColors).forEach(key => {
+                const input = document.getElementById(key);
+                if (input) colors[key] = input.value;
+            });
+            localStorage.setItem('siteColors', JSON.stringify(colors));
+            
+            // Show confirmation
+            console.log('Rang saqlandi:', colorId, value);
+        }
+        
+        function resetColors() {
+            if (confirm('Barcha ranglarni asliga qaytarishni xohlaysizmi?')) {
+                Object.keys(defaultColors).forEach(key => {
+                    const input = document.getElementById(key);
+                    const valueSpan = document.getElementById(key + 'Value');
+                    if (input) {
+                        input.value = defaultColors[key];
+                        if (valueSpan) valueSpan.textContent = defaultColors[key];
+                    }
+                });
+                localStorage.removeItem('siteColors');
+            }
+        }
+        
+        function saveTexts() {
+            const texts = {
+                restoName: document.getElementById('restoNameText').value,
+                footerText: document.getElementById('footerText').value,
+                emptyPanelText: document.getElementById('emptyPanelText').value,
+                salatName: document.getElementById('salatNameText').value,
+                firstName: document.getElementById('firstNameText').value,
+                secondName: document.getElementById('secondNameText').value,
+                copyrightYear: document.getElementById('copyrightYearText').value,
+                restoNameSize: document.getElementById('restoNameSize').value,
+                footerSize: document.getElementById('footerSize').value,
+                emptyPanelSize: document.getElementById('emptyPanelSize').value
+            };
+            localStorage.setItem('siteTexts', JSON.stringify(texts));
+            
+            // Update category names in menuCategories
+            menuCategories.forEach(cat => {
+                if (cat.id === 'salat') cat.name = texts.salatName;
+                if (cat.id === 'first') cat.name = texts.firstName;
+                if (cat.id === 'second') cat.name = texts.secondName;
+            });
+            
+            alert('✅ Barcha matnlar va o\'lchamlar saqlandi! Frontend yangilanadi.');
+        }
+        
+        function updateTextSize(sizeId, value) {
+            const valueSpan = document.getElementById(sizeId + 'Value');
+            if (valueSpan) valueSpan.textContent = value + 'px';
+            
+            // Auto-save size changes
+            const texts = {};
+            Object.keys(defaultTexts).forEach(key => {
+                if (key.endsWith('Size')) {
+                    const input = document.getElementById(key);
+                    if (input) texts[key] = input.value;
+                }
+            });
+            localStorage.setItem('siteTexts', JSON.stringify(texts));
+        }
+    </script>
+</body>
+</html>

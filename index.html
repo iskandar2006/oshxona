@@ -6,16 +6,24 @@
     <title>Menyu | Choyxona</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Google Fonts (Inter - zamonaviy font) -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #f2f0e9;
+            --card-bg-color: #ffffff;
+            --header-color-1: #0a1f2e;
+            --header-color-2: #1d3b4c;
+            --accent-color: #e6b17e;
+            --price-color: #0f5b3c;
+        }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         body {
-            background: #f2f0e9;
+            background: var(--bg-color);
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
@@ -24,18 +32,18 @@
             padding: 16px;
         }
         .menu-card {
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
-            background: #ffffff;
+            background: var(--card-bg-color);
             border-radius: 40px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             overflow: hidden;
             position: relative;
         }
 
-        /* Header with pattern */
+        /* Header */
         .header {
-            background: linear-gradient(135deg, #0a1f2e 0%, #1d3b4c 100%);
+            background: linear-gradient(135deg, var(--header-color-1) 0%, var(--header-color-2) 100%);
             padding: 32px 24px 28px;
             position: relative;
             overflow: hidden;
@@ -48,15 +56,6 @@
             font-size: 120px;
             opacity: 0.08;
             transform: rotate(-15deg);
-        }
-        .header::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 30%, rgba(255,215,150,0.1) 0%, transparent 50%);
         }
         .resto-name {
             font-size: 2rem;
@@ -77,7 +76,7 @@
             font-size: 1.2rem;
         }
 
-        /* Social icons modern */
+        /* Social icons */
         .social-row {
             display: flex;
             gap: 12px;
@@ -128,14 +127,13 @@
             flex: 1;
             text-align: center;
             min-width: 100px;
-            letter-spacing: -0.2px;
         }
         .cat-pill.active {
-            background: #e6b17e;
-            color: #0a1f2e;
-            border-color: #e6b17e;
+            background: var(--accent-color);
+            color: var(--header-color-1);
+            border-color: var(--accent-color);
             font-weight: 600;
-            box-shadow: 0 8px 20px -8px #e6b17e;
+            box-shadow: 0 8px 20px -8px var(--accent-color);
         }
         .cat-pill i {
             margin-right: 6px;
@@ -144,54 +142,83 @@
 
         /* Main content */
         .content {
-            padding: 28px 24px 24px;
+            padding: 28px 20px 24px;
             background: #ffffff;
         }
 
-        /* Menu items - modern card style */
+        /* Menu items - with images */
         .menu-grid {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
             margin-bottom: 32px;
-            min-height: 340px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
         }
+        
+        /* Scroll bar styling */
+        .menu-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .menu-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .menu-grid::-webkit-scrollbar-thumb {
+            background: #e6b17e;
+            border-radius: 10px;
+        }
+
         .menu-item {
             background: #f8f7f4;
-            border-radius: 28px;
-            padding: 18px 20px;
+            border-radius: 24px;
+            padding: 12px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 14px;
             cursor: pointer;
             border: 1px solid transparent;
             transition: all 0.2s;
             box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
         .menu-item:hover {
-            border-color: #e6b17e;
-            background: #ffffff;
-            box-shadow: 0 10px 25px -12px #e6b17e;
+            border-color: var(--accent-color);
+            background: var(--card-bg-color);
+            box-shadow: 0 10px 25px -12px var(--accent-color);
             transform: translateY(-2px);
         }
-        .item-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
+
+        /* Food image */
+        .item-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #eaeaea;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 2px solid white;
         }
-        .item-number {
-            width: 44px;
-            height: 44px;
-            background: #ffffff;
-            border-radius: 18px;
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .item-image .no-image {
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            color: #1d3b4c;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            font-size: 1.1rem;
-            border: 1px solid #eaeaea;
+            background: linear-gradient(145deg, #e6b17e, #d49a6a);
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .item-info {
+            flex: 1;
         }
         .item-info h4 {
             font-size: 1.1rem;
@@ -200,29 +227,40 @@
             margin-bottom: 4px;
             letter-spacing: -0.3px;
         }
-        .item-info p {
-            font-size: 0.8rem;
+        .item-info .item-umumiy {
+            font-size: 0.75rem;
             color: #64748b;
             display: flex;
             align-items: center;
             gap: 4px;
+            margin-bottom: 4px;
+            line-height: 1.2;
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .item-info .item-umumiy i {
+            color: #e6b17e;
+            font-size: 0.7rem;
         }
         .item-price {
             background: #dff1e8;
-            padding: 10px 18px;
+            padding: 6px 14px;
             border-radius: 40px;
             font-weight: 700;
-            font-size: 1.1rem;
-            color: #0f5b3c;
-            letter-spacing: -0.3px;
+            font-size: 1rem;
+            color: var(--price-color);
             border: 1px solid #c0e0d0;
+            white-space: nowrap;
+            margin-left: auto;
         }
 
-        /* Detail panel - modern glass */
+        /* Detail panel */
         .detail-panel {
             background: #f8f7f4;
             border-radius: 28px;
-            padding: 24px;
+            padding: 20px;
             border: 1px solid #eaeaea;
             margin-top: 8px;
         }
@@ -230,7 +268,7 @@
             font-size: 1.2rem;
             font-weight: 600;
             color: #1e293b;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -244,30 +282,81 @@
         .detail-box {
             background: white;
             border-radius: 22px;
-            padding: 20px;
+            padding: 18px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+        }
+        .detail-header {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+        .detail-image {
+            width: 90px;
+            height: 90px;
+            border-radius: 24px;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border: 3px solid white;
+        }
+        .detail-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .detail-image .no-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #e6b17e, #d49a6a);
+            color: white;
+            font-size: 2.2rem;
         }
         .detail-name {
             font-size: 1.3rem;
             font-weight: 700;
             color: #1d3b4c;
-            margin-bottom: 12px;
             letter-spacing: -0.4px;
+            margin-bottom: 4px;
+        }
+        .detail-umumiy {
+            background: #f0f9f4;
+            padding: 16px;
+            border-radius: 18px;
+            margin-bottom: 16px;
+            border-left: 4px solid #e6b17e;
+        }
+        .detail-umumiy-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+        .detail-umumiy-text {
+            font-size: 0.95rem;
+            color: #334155;
+            line-height: 1.5;
+            font-style: italic;
         }
         .detail-desc {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #475569;
-            line-height: 1.6;
+            line-height: 1.5;
             margin-bottom: 20px;
-            border-left: 3px solid #e6b17e;
-            padding-left: 16px;
+            background: #faf9f7;
+            padding: 14px;
+            border-radius: 16px;
         }
         .detail-cost {
             background: linear-gradient(135deg, #0f5b3c, #1a784b);
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            padding: 14px 20px;
+            padding: 14px 18px;
             border-radius: 30px;
             text-align: center;
             letter-spacing: -0.5px;
@@ -324,7 +413,6 @@
             border-color: #e6b17e;
         }
 
-        /* Animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -390,25 +478,97 @@
     </div>
 
     <script>
-        // DATA
+        // DATA with images and "umumiy" (summary)
         const menuData = {
             salat: [
-                { name: "Sezar salat", desc: "Tovuq filesi, aysberg, parmesan, kruton, sous", price: 32000 },
-                { name: "Yunon salat", desc: "Feta, bodring, pomidor, qalampir, zaytun", price: 28000 },
-                { name: "Sabzavotli", desc: "Grill qovoq, baqlajon, bolgar, sarimsoq sous", price: 35000 },
-                { name: "Cobb", desc: "Tovuq, bekon, tuxum, avakado, pomidor, roka", price: 39000 }
+                { 
+                    name: "Sezar salat", 
+                    desc: "Tovuq filesi, aysberg, parmesan, kruton, sous",
+                    umumiy: "Mazzali tovuq go'shti, yangi aysberg va maxsus sous bilan",
+                    price: 32000,
+                    image: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=200&h=200&fit=crop"
+                },
+                { 
+                    name: "Yunon salat", 
+                    desc: "Feta, bodring, pomidor, qalampir, zaytun",
+                    umumiy: "Feta pishlog'i, yangi sabzavotlar va zaytun moyi",
+                    price: 28000,
+                    image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200&h=200&fit=crop"
+                },
+                { 
+                    name: "Sabzavotli", 
+                    desc: "Grill qovoq, baqlajon, bolgar, sarimsoq sous",
+                    umumiy: "Grillda pishirilgan sabzavotlar, sarimsoq sousi",
+                    price: 35000,
+                    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop"
+                },
+                { 
+                    name: "Cobb", 
+                    desc: "Tovuq, bekon, tuxum, avakado, pomidor, roka",
+                    umumiy: "Amerika klassik salati, to'yingan va mazzali",
+                    price: 39000,
+                    image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop"
+                }
             ],
             first: [
-                { name: "Mastava", desc: "Qo'y go'shti, guruch, sabzi, piyoz, zira", price: 27000 },
-                { name: "Lag'mon", desc: "Mol go'shti, qalampir, karam, sabzi, ko'k piyoz", price: 32000 },
-                { name: "Sho'rva", desc: "Qo'y qovurg'a, no'xat, kartoshka, piyoz", price: 38000 },
-                { name: "Ugra", desc: "Qo'y go'shti, ugra, loviya, qatiq, sarimsoq", price: 34000 }
+                { 
+                    name: "Mastava", 
+                    desc: "Qo'y go'shti, guruch, sabzi, piyoz, zira",
+                    umumiy: "An'anaviy o'zbek sho'rvasi, mayin ta'mli",
+                    price: 27000,
+                    image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=200&h=200&fit=crop"
+                },
+                { 
+                    name: "Lag'mon", 
+                    desc: "Mol go'shti, qalampir, karam, sabzi, ko'k piyoz",
+                    umumiy: "Uy usulida tayyorlangan uzun lag'mon",
+                    price: 32000,
+                    image: "https://images.unsplash.com/photo-1552611052-68e9c8c10aa4?w=200&h=200&fit=crop"
+                },
+                { 
+                    name: "Sho'rva", 
+                    desc: "Qo'y qovurg'a, no'xat, kartoshka, piyoz",
+                    umumiy: "Qo'y go'shtli, to'yimli va issiq sho'rva",
+                    price: 38000,
+                    image: "https://images.unsplash.com/photo-1603105037880-4cd0f5c7f9b8?w=200&h=200&fit=crop"
+                },
+                { 
+                    name: "Ugra", 
+                    desc: "Qo'y go'shti, ugra, loviya, qatiq, sarimsoq",
+                    umumiy: "Qatiq va sarimsoq bilan, an'anaviy ugra",
+                    price: 34000,
+                    image: "https://images.unsplash.com/photo-1552611052-68e9c8c10aa4?w=200&h=200&fit=crop"
+                }
             ],
             second: [
-                { name: "Qiyma kabob", desc: "Mol go'shti qiymasi, piyoz, zira, non", price: 45000 },
-                { name: "Qozon kabob", desc: "Qo'y go'shti, kartoshka, piyoz, qazi", price: 52000 },
-                { name: "Tandir tovuq", desc: "Tovuq, tandir ziravorlari, kartoshka", price: 48000 },
-                { name: "Jiz", desc: "Qo'y jigari, piyoz, kartoshka, maxsus zira", price: 43000 }
+                { 
+                    name: "Qiyma kabob", 
+                    desc: "Mol go'shti qiymasi, piyoz, zira, non",
+                    umumiy: "Tandirda pishirilgan qiyma kabob",
+                    price: 45000,
+                    image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=200&h=200&fit=crop"
+                },
+                { 
+                    name: "Qozon kabob", 
+                    desc: "Qo'y go'shti, kartoshka, piyoz, qazi",
+                    umumiy: "Qozonda dimlangan qo'y go'shti",
+                    price: 52000,
+                    image: "https://images.unsplash.com/photo-1604908176997-125f25e8136a?w=200&h=200&fit=crop"
+                },
+                { 
+                    name: "Tandir tovuq", 
+                    desc: "Tovuq, tandir ziravorlari, kartoshka",
+                    umumiy: "Maxsus ziravorlarda tandirda pishgan tovuq",
+                    price: 48000,
+                    image: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=200&h=200&fit=crop"
+                },
+                { 
+                    name: "Jiz", 
+                    desc: "Qo'y jigari, piyoz, kartoshka, maxsus zira",
+                    umumiy: "Qizdirilgan qo'y jigari, kartoshka bilan",
+                    price: 43000,
+                    image: "https://images.unsplash.com/photo-1604908176997-125f25e8136a?w=200&h=200&fit=crop"
+                }
             ]
         };
 
@@ -417,6 +577,11 @@
         const catPills = document.querySelectorAll('.cat-pill');
         
         let activeCat = 'salat';
+        let menuCategories = [
+            { id: 'salat', name: 'Salat', icon: 'fas fa-leaf' },
+            { id: 'first', name: '1-ovqat', icon: 'fas fa-utensils' },
+            { id: 'second', name: '2-ovqat', icon: 'fas fa-fire' }
+        ];
 
         // Category click
         catPills.forEach(pill => {
@@ -425,23 +590,43 @@
                 this.classList.add('active');
                 activeCat = this.dataset.cat;
                 renderMenu(activeCat);
+                
+                // Clear detail panel when changing category
+                detailContent.innerHTML = `
+                    <div class="empty-detail">
+                        <i class="fas fa-hand-pointer"></i>
+                        <div>Taom tanlang</div>
+                    </div>
+                `;
             });
         });
 
-        // Render menu items
+        // Render menu items with images and "umumiy"
         function renderMenu(category) {
             const items = menuData[category];
             if (!items) return;
 
             let html = '';
             items.forEach((item, index) => {
+                // Image or placeholder
+                const imageHtml = item.image 
+                    ? `<img src="${item.image}" alt="${item.name}" loading="lazy">`
+                    : `<div class="no-image"><i class="fas fa-utensils"></i></div>`;
+                
                 html += `
-                    <div class="menu-item" data-name="${item.name}" data-desc="${item.desc}" data-price="${item.price}">
-                        <div class="item-left">
-                            <div class="item-number">${index + 1}</div>
-                            <div class="item-info">
-                                <h4>${item.name}</h4>
-                                <p><i class="fas fa-chevron-right" style="font-size: 8px;"></i> batafsil</p>
+                    <div class="menu-item" 
+                         data-name="${item.name}" 
+                         data-desc="${item.desc}" 
+                         data-umumiy="${item.umumiy || 'Mazzali taom'}"
+                         data-price="${item.price}"
+                         data-image="${item.image || ''}">
+                        <div class="item-image">
+                            ${imageHtml}
+                        </div>
+                        <div class="item-info">
+                            <h4>${item.name}</h4>
+                            <div class="item-umumiy">
+                                <i class="fas fa-circle"></i> ${(item.umumiy || 'Mazzali taom').substring(0, 40)}...
                             </div>
                         </div>
                         <div class="item-price">${Math.floor(item.price/1000)}k</div>
@@ -455,12 +640,39 @@
                 item.addEventListener('click', function() {
                     const name = this.dataset.name;
                     const desc = this.dataset.desc;
+                    const umumiy = this.dataset.umumiy;
                     const price = this.dataset.price;
+                    const image = this.dataset.image;
+                    
+                    // Image for detail
+                    const imageHtml = image 
+                        ? `<img src="${image}" alt="${name}">`
+                        : `<div class="no-image"><i class="fas fa-utensils"></i></div>`;
                     
                     detailContent.innerHTML = `
                         <div class="detail-box">
-                            <div class="detail-name">${name}</div>
-                            <div class="detail-desc">${desc}</div>
+                            <div class="detail-header">
+                                <div class="detail-image">
+                                    ${imageHtml}
+                                </div>
+                                <div>
+                                    <div class="detail-name">${name}</div>
+                                    <div style="color: #64748b; font-size: 0.85rem; margin-top: 4px;">
+                                        <i class="fas fa-star" style="color: #e6b17e;"></i> Eng sara taom
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-umumiy">
+                                <div class="detail-umumiy-title"><i class="fas fa-info-circle"></i> UMUMIY</div>
+                                <div class="detail-umumiy-text">${umumiy}</div>
+                            </div>
+                            
+                            <div class="detail-desc">
+                                <i class="fas fa-clipboard-list" style="color: #e6b17e; margin-right: 6px;"></i>
+                                <strong>Tarkibi:</strong> ${desc}
+                            </div>
+                            
                             <div class="detail-cost">${Number(price).toLocaleString()} so'm</div>
                         </div>
                     `;
@@ -470,6 +682,84 @@
 
         // Initial render
         renderMenu('salat');
+        renderCategoryPills();
+
+        // Load from localStorage on startup
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedCategories = localStorage.getItem('menuCategories');
+            const savedData = localStorage.getItem('menuData');
+            const savedColors = localStorage.getItem('siteColors');
+            const savedTexts = localStorage.getItem('siteTexts');
+            
+            if (savedCategories) {
+                menuCategories = JSON.parse(savedCategories);
+            }
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                Object.keys(parsedData).forEach(key => {
+                    if (menuData[key]) {
+                        menuData[key] = parsedData[key];
+                    }
+                });
+            }
+            
+            // Apply colors
+            if (savedColors) {
+                const colors = JSON.parse(savedColors);
+                const root = document.documentElement.style;
+                if (colors.bgColor) root.setProperty('--bg-color', colors.bgColor);
+                if (colors.cardBgColor) root.setProperty('--card-bg-color', colors.cardBgColor);
+                if (colors.headerColor1) root.setProperty('--header-color-1', colors.headerColor1);
+                if (colors.headerColor2) root.setProperty('--header-color-2', colors.headerColor2);
+                if (colors.accentColor) root.setProperty('--accent-color', colors.accentColor);
+                if (colors.priceColor) root.setProperty('--price-color', colors.priceColor);
+            }
+            
+            // Apply texts
+            if (savedTexts) {
+                const texts = JSON.parse(savedTexts);
+                if (texts.restoName) {
+                    const restoEl = document.querySelector('.resto-name');
+                    restoEl.innerHTML = '<i class="fas fa-utensils"></i> ' + texts.restoName;
+                    if (texts.restoNameSize) restoEl.style.fontSize = texts.restoNameSize + 'px';
+                }
+                if (texts.footerText) {
+                    const footerEl = document.querySelector('.footer span');
+                    footerEl.textContent = texts.footerText;
+                    if (texts.footerSize) footerEl.style.fontSize = texts.footerSize + 'px';
+                }
+                if (texts.emptyPanelText) {
+                    const panelEl = document.querySelector('#detailContent div:last-child');
+                    panelEl.textContent = texts.emptyPanelText;
+                    if (texts.emptyPanelSize) panelEl.style.fontSize = texts.emptyPanelSize + 'px';
+                }
+                
+                // Update category pill names
+                renderCategoryPills();
+            }
+            
+            renderCategoryPills();
+            renderMenu(activeCat);
+        });
+
+        function renderCategoryPills() {
+            const container = document.querySelector('.category-row');
+            container.innerHTML = '';
+            
+            menuCategories.forEach(cat => {
+                const pill = document.createElement('div');
+                pill.className = 'cat-pill' + (activeCat === cat.id ? ' active' : '');
+                pill.dataset.cat = cat.id;
+                pill.innerHTML = `<i class="${cat.icon}"></i> ${cat.name}`;
+                pill.onclick = function() {
+                    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                    activeCat = this.dataset.cat;
+                    renderMenu(activeCat);
+                };
+                container.appendChild(pill);
+            });
+        }
     </script>
 </body>
 </html>
